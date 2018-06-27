@@ -1,0 +1,50 @@
+version: "3"
+networks:
+  etcd_custom:
+    external: true
+services:
+  consumer0:
+    build: .
+    image: consumer
+    container_name: consumer0
+    networks:
+      - etcd_custom
+    external_links:
+      - etcd
+      - provider
+    environment:
+      - ETCD_HOST=http://etcd0:2379
+      - DO_INIT=true
+    volumes:
+      - .:/app
+      - ./node_modules_0:/app/node_modules
+  consumer1:
+      image: consumer
+      container_name: consumer1
+      networks:
+        - etcd_custom
+      external_links:
+        - etcd
+        - provider
+      environment:
+        - ETCD_HOST=http://etcd0:2379
+      volumes:
+        - .:/app
+        - ./node_modules_1:/app/node_modules
+      depends_on:
+        - consumer0
+  consumer2:
+        image: consumer
+        container_name: consumer2
+        networks:
+          - etcd_custom
+        external_links:
+          - etcd
+          - provider
+        environment:
+          - ETCD_HOST=http://etcd0:2379
+        volumes:
+          - .:/app
+          - ./node_modules_2:/app/node_modules
+        depends_on:
+          - consumer0

@@ -1,0 +1,16 @@
+version: "3"
+networks:
+  etcd_custom:
+    external: true
+services:
+  provider:
+    build: .
+    image: provider
+    container_name: provider
+    networks:
+      - etcd_custom
+    volumes:
+      - .:/app
+    ports:
+      - 5000:5000
+
